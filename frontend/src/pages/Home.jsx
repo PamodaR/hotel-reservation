@@ -133,48 +133,49 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* View Room Availability Section */}
-            <section id="availability" className="py-24 bg-surface-50 border-t border-surface-200">
-                <div className="max-w-5xl mx-auto px-4 text-center">
-                    <div className="inline-block p-3 rounded-2xl bg-white shadow-sm mb-6">
-                        <CheckCircle className="w-8 h-8 text-primary-500 mx-auto" />
-                    </div>
-                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-surface-900 mb-4">
-                        Check Room Availability
-                    </h2>
-                    <p className="text-surface-600 mb-10 max-w-2xl mx-auto">
-                        Ready to experience luxury? Enter your dates to see available rooms and exclusive offers.
-                    </p>
+     {/*
+<section id="availability" className="py-24 bg-surface-50 border-t border-surface-200">
+    <div className="max-w-5xl mx-auto px-4 text-center">
+        <div className="inline-block p-3 rounded-2xl bg-white shadow-sm mb-6">
+            <CheckCircle className="w-8 h-8 text-primary-500 mx-auto" />
+        </div>
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-surface-900 mb-4">
+            Check Room Availability
+        </h2>
+        <p className="text-surface-600 mb-10 max-w-2xl mx-auto">
+            Ready to experience luxury? Enter your dates to see available rooms and exclusive offers.
+        </p>
 
-                    <div className="bg-white p-8 rounded-2xl shadow-xl max-w-4xl mx-auto border border-surface-100 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-gold-100/50 rounded-bl-full -mr-16 -mt-16 z-0"></div>
-                        <div className="relative z-10 grid md:grid-cols-3 gap-6">
-                            <div className="space-y-2 text-left">
-                                <label className="text-sm font-semibold text-surface-700 uppercase tracking-wider">Check-in</label>
-                                <input 
-                                    type="date" 
-                                    className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-                                />
-                            </div>
-                            <div className="space-y-2 text-left">
-                                <label className="text-sm font-semibold text-surface-700 uppercase tracking-wider">Check-out</label>
-                                <input 
-                                    type="date" 
-                                    className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-                                />
-                            </div>
-                            <div className="flex items-end">
-                                <Button className="w-full h-[50px] text-lg bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/30">
-                                    Check Availability
-                                </Button>
-                            </div>
-                        </div>
-                        <p className="mt-4 text-xs text-surface-400">
-                            * Best price guarantee when booking directly.
-                        </p>
-                    </div>
+        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-4xl mx-auto border border-surface-100 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gold-100/50 rounded-bl-full -mr-16 -mt-16 z-0"></div>
+            <div className="relative z-10 grid md:grid-cols-3 gap-6">
+                <div className="space-y-2 text-left">
+                    <label className="text-sm font-semibold text-surface-700 uppercase tracking-wider">Check-in</label>
+                    <input 
+                        type="date" 
+                        className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    />
                 </div>
-            </section>
+                <div className="space-y-2 text-left">
+                    <label className="text-sm font-semibold text-surface-700 uppercase tracking-wider">Check-out</label>
+                    <input 
+                        type="date" 
+                        className="w-full px-4 py-3 bg-surface-50 border border-surface-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    />
+                </div>
+                <div className="flex items-end">
+                    <Button className="w-full h-[50px] text-lg bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/30">
+                        Check Availability
+                    </Button>
+                </div>
+            </div>
+            <p className="mt-4 text-xs text-surface-400">
+                * Best price guarantee when booking directly.
+            </p>
+        </div>
+    </div>
+</section>
+*/}
 
             {/* Footer */}
             <footer className="bg-surface-900 text-white py-12 border-t border-surface-800">
