@@ -131,7 +131,7 @@ const Login = () => {
                         </Button>
                     </form>
 
-                    <div className="pt-6 border-t border-surface-200">
+                  {/* <div className="pt-6 border-t border-surface-200">
                         <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4">
                             <p className="text-sm text-blue-900 font-medium mb-2 flex items-center">
                                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
@@ -148,7 +148,7 @@ const Login = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
 
                     <p className="text-center text-sm text-surface-500 mt-8">
                         © 2026 Ocean View Resort. All rights reserved.

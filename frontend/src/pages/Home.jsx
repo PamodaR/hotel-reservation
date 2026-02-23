@@ -68,7 +68,7 @@ const Home = () => {
                         Discover the perfect blend of luxury, comfort, and breathtaking ocean views. 
                         Your unforgettable getaway starts here at Ocean View Resort.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                   {/*} <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button 
                             className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 text-lg shadow-xl shadow-gold-500/20"
                             onClick={() => document.getElementById('availability').scrollIntoView({ behavior: 'smooth' })}
@@ -76,7 +76,7 @@ const Home = () => {
                             Book Your Stay
                             <ArrowRight className="ml-2 w-5 h-5" />
                         </Button>
-                    </div>
+                    </div>*/}
                 </div>
             </header>
 
