@@ -65,28 +65,24 @@ const Dashboard = () => {
                     title="Total Bookings"
                     value={reservations.length}
                     icon={Calendar}
-                    change="+12% from last month"
                     trend="up"
                 />
                 <StatCard
                     title="Active Guests"
                     value={activeGuests}
                     icon={Users}
-                    change="+5% today"
                     trend="up"
                 />
                 <StatCard
                     title="Total Revenue"
                     value={`Rs. ${totalRevenue.toLocaleString()}`}
                     icon={DollarSign}
-                    change="+8.2% from last month"
                     trend="up"
                 />
                 <StatCard
                     title="Today's Check-ins"
                     value={todayReservations.length}
                     icon={CheckCircle}
-                    change="On track"
                     trend="neutral"
                 />
             </div>
