@@ -9,6 +9,8 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import '../styles.css';
 
+const isUser = localStorage.getItem('role') === 'USER';
+
 const API_BASE = 'http://localhost:8080/api/reservations';
 
 const ROOM_TYPES = [
@@ -76,6 +78,9 @@ export default function Booking() {
   const [searchNumber, setSearchNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const role = localStorage.getItem('role');                                                                                                                                                                                                                
+  const canManageBooking = role === 'STAFF' || role === 'ADMIN';                                                                                                                                                                                            
+                                                                          
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -242,9 +247,11 @@ export default function Booking() {
                   <Button size="lg" onClick={() => setCurrentStep('guest')}>
                     Book Your Stay
                   </Button>
-                  <Button variant="secondary" size="lg" onClick={() => setCurrentStep('search')}>
-                    Manage Booking
-                  </Button>
+                  {canManageBooking && (                                                                                                                                                                                                                   
+                       <Button variant="secondary" size="lg" onClick={() => setCurrentStep('search')}>                                                                                                                                                        
+                           Manage Booking                                                                                                                                                                                                                       
+                        </Button>                                                                                                                                                                                                                              
+                  )}    
                 </div>
               </div>
             </div>

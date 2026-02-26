@@ -16,12 +16,12 @@ const Sidebar = ({ isOpen, toggleSidebar, userRole }) => {
     const location = useLocation();
 
     const navItems = [
-        { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'USER', 'STAFF'] },
+        { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['ADMIN' , 'STAFF'] },
         { path: '/home', label: 'Bookings', icon: CalendarCheck, roles: ['ADMIN', 'USER', 'STAFF'] },
-        { path: '/register-customer', label: 'Register Customer', icon: UserPlus, roles: ['USER', 'STAFF'] },
+        { path: '/register-customer', label: 'Register Customer', icon: UserPlus, roles: ['STAFF'] },
         { path: '/members', label: 'Members', icon: Users, roles: ['ADMIN'] },
         { path: '/admin/register', label: ' Registration', icon: Users, roles: ['ADMIN'] },
-        { path: '/help', label: 'Help & Support', icon: HelpCircle, roles: ['ADMIN', 'USER', 'STAFF'] },
+        { path: '/help', label: 'Help & Support', icon: HelpCircle, roles: ['ADMIN', 'STAFF'] },
     ];
 
     // Filter items based on user role

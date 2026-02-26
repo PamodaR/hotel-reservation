@@ -38,7 +38,12 @@ const Login = () => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 localStorage.setItem('role', data.user.role || 'USER'); // Ensuring correct key 'role' is used across app context
                 localStorage.setItem('userId', data.user.id);
-                navigate('/dashboard');
+                // Navigate based on role
+                if (data.user.role === 'USER') {
+                    navigate('/home');
+                } else  {
+                    navigate('/dashboard'); // or any view you want
+                } 
             } else {
                 setError(data.message || 'Login failed');
             }
