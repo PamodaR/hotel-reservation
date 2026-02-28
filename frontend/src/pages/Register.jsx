@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserPlus, User, Mail, Lock, Shield, Phone, FileText, Globe, Hotel } from 'lucide-react';
+import { UserPlus, User, Mail, Lock, Shield, Phone, FileText } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
@@ -11,7 +11,7 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
         name: '',
         email: '',
         phone: '',
-        documentType: 'ID',
+        documentType: 'ID', // kept for backend compatibility
         documentId: '',
         role: 'USER',
         password: '',
@@ -33,6 +33,7 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
 
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
+            setLoading(false);
             return;
         }
 
@@ -42,14 +43,22 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
+
             const data = await response.json();
 
             if (data.success) {
                 alert('Registration successful!');
                 setFormData({
-                    name: '', email: '', phone: '', documentType: 'ID', documentId: '',
-                    role: 'USER', password: '', confirmPassword: ''
+                    name: '',
+                    email: '',
+                    phone: '',
+                    documentType: 'ID',
+                    documentId: '',
+                    role: 'USER',
+                    password: '',
+                    confirmPassword: ''
                 });
+
                 if (publicMode) {
                     navigate('/login');
                 } else {
@@ -68,6 +77,7 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
 
     return (
         <div className={`min-h-screen flex items-center justify-center p-6 ${publicMode ? 'relative' : 'bg-surface-50'}`}>
+            
             {/* Background Image for Public Mode */}
             {publicMode && (
                 <div className="absolute inset-0 z-0">
@@ -86,10 +96,14 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                         <UserPlus className="w-8 h-8 text-primary-600" />
                     </div>
                     <CardTitle className="text-3xl font-serif text-primary-900">
-                        {publicMode || onlyCustomer ? (publicMode ? 'Join Ocean View' : 'Register Customer') : 'Register New User'}
+                        {publicMode || onlyCustomer 
+                            ? (publicMode ? 'Join Ocean View' : 'Register Customer') 
+                            : 'Register New User'}
                     </CardTitle>
                     <p className="text-surface-600 mt-2">
-                        {publicMode || onlyCustomer ? 'Create account to unlock exclusive rates.' : 'Create a new account for staff or guests.'}
+                        {publicMode || onlyCustomer 
+                            ? 'Create account to unlock exclusive rates.' 
+                            : 'Create a new account for staff or guests.'}
                     </p>
                 </CardHeader>
 
@@ -104,12 +118,13 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                     )}
 
                     <form onSubmit={handleRegister} className="space-y-6">
+
                         <div className="grid md:grid-cols-2 gap-6">
                             <Input
                                 label="Full Name"
                                 name="name"
                                 icon={User}
-                                placeholder="John Doe"
+                                placeholder="Full Name"
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
@@ -119,55 +134,42 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                                 type="email"
                                 name="email"
                                 icon={Mail}
-                                placeholder="john@example.com"
+                                placeholder="Email Address"
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
                             />
                         </div>
 
-                        {/* Contact & ID Details - Always Visible */}
+                        {/* Contact & NIC Details */}
                         <div className="grid md:grid-cols-2 gap-6">
                             <Input
                                 label="Phone Number"
                                 type="tel"
                                 name="phone"
                                 icon={Phone}
-                                placeholder="+94 77 123 4567"
+                                placeholder="Phone Number"
                                 value={formData.phone}
                                 onChange={handleChange}
                                 required
                             />
-                            {/* ID/Passport Section */}
+
+                            {/* NIC Only (Dropdown Removed) */}
                             <div>
-                                <label className="block text-sm font-medium text-surface-700 mb-2">ID / Passport</label>
-                                <div className="flex bg-white/50 border border-surface-200 rounded-xl focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-transparent transition-all duration-200">
-                                    <div className="relative w-1/3 border-r border-surface-200">
-                                        <select
-                                            name="documentType"
-                                            value={formData.documentType}
-                                            onChange={handleChange}
-                                            className="w-full h-full pl-3 pr-6 bg-transparent outline-none text-sm text-surface-900 appearance-none rounded-l-xl"
-                                        >
-                                            <option value="ID">NIC</option>
-                                            <option value="PASSPORT">Passport</option>
-                                        </select>
-                                        <div className="absolute inset-y-0 right-0 flex items-center px-1 pointer-events-none">
-                                            <svg className="w-3 h-3 text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                        </div>
-                                    </div>
-                                    <div className="relative w-2/3">
-                                        <FileText className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 w-4 h-4 pointer-events-none" />
-                                        <input
-                                            type="text"
-                                            name="documentId"
-                                            value={formData.documentId}
-                                            onChange={handleChange}
-                                            placeholder={formData.documentType === 'ID' ? '123456789V' : 'N12345678'}
-                                            className="w-full h-full pl-9 pr-4 bg-transparent outline-none text-surface-900 placeholder-surface-400 rounded-r-xl"
-                                            required
-                                        />
-                                    </div>
+                                <label className="block text-sm font-medium text-surface-700 mb-2">
+                                    ID/Passport
+                                </label>
+                                <div className="relative">
+                                    <FileText className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 w-4 h-4 pointer-events-none" />
+                                    <input
+                                        type="text"
+                                        name="documentId"
+                                        value={formData.documentId}
+                                        onChange={handleChange}
+                                        placeholder="ID Number"
+                                        className="w-full pl-9 pr-4 py-3 bg-white/50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all duration-200 text-surface-900 placeholder-surface-400"
+                                        required
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -175,7 +177,9 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                         {/* Admin Role Selection */}
                         {!publicMode && !onlyCustomer && (
                             <div>
-                                <label className="block text-sm font-medium text-surface-700 mb-2">User Role</label>
+                                <label className="block text-sm font-medium text-surface-700 mb-2">
+                                    User Role
+                                </label>
                                 <div className="relative">
                                     <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400 w-5 h-5 pointer-events-none" />
                                     <select
@@ -188,9 +192,6 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                                         <option value="STAFF">Staff Member</option>
                                         <option value="ADMIN">Admin</option>
                                     </select>
-                                    <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                                        <svg className="w-4 h-4 text-surface-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                    </div>
                                 </div>
                             </div>
                         )}
@@ -224,7 +225,9 @@ const Register = ({ publicMode = false, onlyCustomer = false }) => {
                             isLoading={loading}
                         >
                             <UserPlus className="w-5 h-5 mr-2" />
-                            {publicMode || onlyCustomer ? 'Register Customer' : 'Create Staff Account'}
+                            {publicMode || onlyCustomer 
+                                ? 'Register Customer' 
+                                : 'Create Staff Account'}
                         </Button>
                     </form>
                 </CardContent>

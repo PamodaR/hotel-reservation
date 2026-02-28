@@ -78,12 +78,85 @@ export default function Booking() {
   const [searchNumber, setSearchNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const role = localStorage.getItem('role');                                                                                                                                                                                                                
-  const canManageBooking = role === 'STAFF' || role === 'ADMIN';                                                                                                                                                                                            
-                                                                          
+  // --- ADDED: Guest form validation errors state ---
+  const [guestErrors, setGuestErrors] = useState({});
+
+  const role = localStorage.getItem('role');
+  const canManageBooking = role === 'STAFF' || role === 'ADMIN';
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // --- ADDED: Clear individual field error on change ---
+    if (guestErrors[name]) {
+      setGuestErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // --- ADDED: Guest form validation for ALL fields ---
+  const validateGuestForm = () => {
+    const errors = {};
+
+    // Full Name — required, min 3, max 100 chars, letters/spaces/punctuation only
+    if (!formData.guestName.trim()) {
+      errors.guestName = 'Full name is required.';
+    } else if (formData.guestName.trim().length < 3) {
+      errors.guestName = 'Name must be at least 3 characters.';
+    } else if (formData.guestName.trim().length > 100) {
+      errors.guestName = 'Name must not exceed 100 characters.';
+    } else if (!/^[a-zA-Z\s.'-]+$/.test(formData.guestName.trim())) {
+      errors.guestName = 'Name can only contain letters, spaces, and basic punctuation.';
+    }
+
+    // Email — required, valid format, max 150 chars
+    if (!formData.email.trim()) {
+      errors.email = 'Email address is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      errors.email = 'Please enter a valid email address.';
+    } else if (formData.email.trim().length > 150) {
+      errors.email = 'Email must not exceed 150 characters.';
+    }
+
+    // Contact Number — required, 7–15 digits, allows +, spaces, dashes, parentheses
+    if (!formData.contactNumber.trim()) {
+      errors.contactNumber = 'Contact number is required.';
+    } else if (!/^\+?[0-9\s\-()]{7,15}$/.test(formData.contactNumber.trim())) {
+      errors.contactNumber = 'Please enter a valid contact number (7–15 digits).';
+    }
+
+    // ID/Passport — required, 5–20 alphanumeric characters
+    if (!formData.idNumber.trim()) {
+      errors.idNumber = 'ID/Passport number is required.';
+    } else if (formData.idNumber.trim().length < 5) {
+      errors.idNumber = 'ID/Passport number must be at least 5 characters.';
+    } else if (formData.idNumber.trim().length > 20) {
+      errors.idNumber = 'ID/Passport number must not exceed 20 characters.';
+    } else if (!/^[a-zA-Z0-9\-]+$/.test(formData.idNumber.trim())) {
+      errors.idNumber = 'ID/Passport can only contain letters, numbers, and hyphens.';
+    }
+
+    // Address — required, min 10 chars, max 300 chars
+    if (!formData.address.trim()) {
+      errors.address = 'Address is required.';
+    } else if (formData.address.trim().length < 10) {
+      errors.address = 'Please enter a complete address (at least 10 characters).';
+    } else if (formData.address.trim().length > 300) {
+      errors.address = 'Address must not exceed 300 characters.';
+    }
+
+    return errors;
+  };
+
+  // --- ADDED: Handle Next Step with validation ---
+  const handleGuestNextStep = () => {
+    const errors = validateGuestForm();
+    if (Object.keys(errors).length > 0) {
+      setGuestErrors(errors);
+      return;
+    }
+    setGuestErrors({});
+    setCurrentStep('booking');
   };
 
   const calculateNights = () => {
@@ -182,6 +255,7 @@ export default function Booking() {
     });
     setReservation(null);
     setSearchNumber('');
+    setGuestErrors({}); // --- ADDED: Reset errors on form reset ---
   };
 
   // Helper to render progress steps
@@ -247,11 +321,11 @@ export default function Booking() {
                   <Button size="lg" onClick={() => setCurrentStep('guest')}>
                     Book Your Stay
                   </Button>
-                  {canManageBooking && (                                                                                                                                                                                                                   
-                       <Button variant="secondary" size="lg" onClick={() => setCurrentStep('search')}>                                                                                                                                                        
-                           Manage Booking                                                                                                                                                                                                                       
-                        </Button>                                                                                                                                                                                                                              
-                  )}    
+                  {canManageBooking && (
+                    <Button variant="secondary" size="lg" onClick={() => setCurrentStep('search')}>
+                      Manage Booking
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -283,28 +357,99 @@ export default function Booking() {
               <div className="p-8">
                 <h2 className="text-2xl font-bold text-surface-900 font-serif mb-6">Guest Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input label="Full Name" name="guestName" icon={User} placeholder="John Doe" value={formData.guestName} onChange={handleInputChange} required />
-                  <Input label="Email Address" type="email" name="email" icon={Mail} placeholder="email@example.com" value={formData.email} onChange={handleInputChange} required />
-                  <Input label="Contact Number" name="contactNumber" icon={Phone} placeholder="+94 ..." value={formData.contactNumber} onChange={handleInputChange} required />
-                  <Input label="ID/Passport" name="idNumber" placeholder="ID Number" value={formData.idNumber} onChange={handleInputChange} />
+
+                  {/* Full Name */}
+                  <div>
+                    <Input
+                      label="Full Name"
+                      name="guestName"
+                      icon={User}
+                      placeholder="Full Name"
+                      value={formData.guestName}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {/* ADDED: Error message */}
+                    {guestErrors.guestName && (
+                      <p className="mt-1 text-xs text-red-500">{guestErrors.guestName}</p>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <Input
+                      label="Email Address"
+                      type="email"
+                      name="email"
+                      icon={Mail}
+                      placeholder="Email Address"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {/* ADDED: Error message */}
+                    {guestErrors.email && (
+                      <p className="mt-1 text-xs text-red-500">{guestErrors.email}</p>
+                    )}
+                  </div>
+
+                  {/* Contact Number */}
+                  <div>
+                    <Input
+                      label="Contact Number"
+                      name="contactNumber"
+                      icon={Phone}
+                      placeholder="Contact Number"
+                      value={formData.contactNumber}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {/* ADDED: Error message */}
+                    {guestErrors.contactNumber && (
+                      <p className="mt-1 text-xs text-red-500">{guestErrors.contactNumber}</p>
+                    )}
+                  </div>
+
+                  {/* ID/Passport */}
+                  <div>
+                    <Input
+                      label="ID/Passport"
+                      name="idNumber"
+                      placeholder="ID Number"
+                      value={formData.idNumber}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    {/* ADDED: Error message */}
+                    {guestErrors.idNumber && (
+                      <p className="mt-1 text-xs text-red-500">{guestErrors.idNumber}</p>
+                    )}
+                  </div>
+
+                  {/* Address */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-surface-700 mb-2">Address</label>
                     <textarea
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-white border border-surface-200 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none"
+                      className={`w-full px-4 py-3 bg-white border rounded-xl focus:ring-2 focus:ring-primary-500 outline-none ${
+                        guestErrors.address ? 'border-red-400 focus:ring-red-300' : 'border-surface-200'
+                      }`}
                       rows="3"
                       placeholder="Your residential address"
                     />
+                    {/* ADDED: Error message */}
+                    {guestErrors.address && (
+                      <p className="mt-1 text-xs text-red-500">{guestErrors.address}</p>
+                    )}
                   </div>
+
                 </div>
                 <div className="mt-8 flex justify-end gap-3">
                   <Button variant="ghost" onClick={() => setCurrentStep('home')}>Cancel</Button>
-                  <Button
-                    onClick={() => setCurrentStep('booking')}
-                    disabled={!formData.guestName || !formData.email}
-                  >
+                  {/* ADDED: Changed onClick to handleGuestNextStep for validation */}
+                  <Button onClick={handleGuestNextStep}>
                     Next Step <ChevronRight className="ml-2 w-4 h-4" />
                   </Button>
                 </div>
@@ -554,7 +699,7 @@ export default function Booking() {
 
                 <div className="flex gap-4 print:hidden">
                   <Button variant="outline" onClick={printBill} className="flex-1">
-                    <Printer className="w-4 h-4 mr-2" /> Print Invoice
+                    <Printer className="w-4 h-4 mr-2" /> Export Bill
                   </Button>
                   <Button onClick={resetForm} className="flex-1">
                     Make Another Booking
