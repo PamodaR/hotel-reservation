@@ -78,8 +78,9 @@ export default function Booking() {
   const [searchNumber, setSearchNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // --- ADDED: Guest form validation errors state ---
   const [guestErrors, setGuestErrors] = useState({});
+  // ADDED: Search error state
+  const [searchError, setSearchError] = useState('');
 
   const role = localStorage.getItem('role');
   const canManageBooking = role === 'STAFF' || role === 'ADMIN';
@@ -88,17 +89,14 @@ export default function Booking() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // --- ADDED: Clear individual field error on change ---
     if (guestErrors[name]) {
       setGuestErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
-  // --- ADDED: Guest form validation for ALL fields ---
   const validateGuestForm = () => {
     const errors = {};
 
-    // Full Name — required, min 3, max 100 chars, letters/spaces/punctuation only
     if (!formData.guestName.trim()) {
       errors.guestName = 'Full name is required.';
     } else if (formData.guestName.trim().length < 3) {
@@ -109,7 +107,6 @@ export default function Booking() {
       errors.guestName = 'Name can only contain letters, spaces, and basic punctuation.';
     }
 
-    // Email — required, valid format, max 150 chars
     if (!formData.email.trim()) {
       errors.email = 'Email address is required.';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
@@ -118,14 +115,12 @@ export default function Booking() {
       errors.email = 'Email must not exceed 150 characters.';
     }
 
-    // Contact Number — required, 7–15 digits, allows +, spaces, dashes, parentheses
     if (!formData.contactNumber.trim()) {
       errors.contactNumber = 'Contact number is required.';
     } else if (!/^\+?[0-9\s\-()]{7,15}$/.test(formData.contactNumber.trim())) {
       errors.contactNumber = 'Please enter a valid contact number (7–15 digits).';
     }
 
-    // ID/Passport — required, 5–20 alphanumeric characters
     if (!formData.idNumber.trim()) {
       errors.idNumber = 'ID/Passport number is required.';
     } else if (formData.idNumber.trim().length < 5) {
@@ -136,7 +131,6 @@ export default function Booking() {
       errors.idNumber = 'ID/Passport can only contain letters, numbers, and hyphens.';
     }
 
-    // Address — required, min 10 chars, max 300 chars
     if (!formData.address.trim()) {
       errors.address = 'Address is required.';
     } else if (formData.address.trim().length < 10) {
@@ -148,7 +142,6 @@ export default function Booking() {
     return errors;
   };
 
-  // --- ADDED: Handle Next Step with validation ---
   const handleGuestNextStep = () => {
     const errors = validateGuestForm();
     if (Object.keys(errors).length > 0) {
@@ -192,7 +185,7 @@ export default function Booking() {
         alert('Failed to create reservation');
       }
     } catch (error) {
-      alert('Error: ' + error.message); // In real app, use toast
+      alert('Error: ' + error.message);
     }
     setLoading(false);
   };
@@ -218,6 +211,12 @@ export default function Booking() {
   };
 
   const searchReservation = async () => {
+    // ADDED: Empty field validation
+    if (!searchNumber.trim()) {
+      setSearchError('Please enter a reservation ID.');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE}/${searchNumber}`);
@@ -226,7 +225,8 @@ export default function Booking() {
         setReservation(data);
         setCurrentStep('bill');
       } else {
-        alert('Reservation not found');
+        // ADDED: Not found error
+        setSearchError('No reservation found with this ID. Please check and try again.');
       }
     } catch (error) {
       console.error(error);
@@ -255,10 +255,10 @@ export default function Booking() {
     });
     setReservation(null);
     setSearchNumber('');
-    setGuestErrors({}); // --- ADDED: Reset errors on form reset ---
+    setGuestErrors({});
+    setSearchError(''); // ADDED: Reset search error
   };
 
-  // Helper to render progress steps
   const renderStepper = () => {
     if (currentStep === 'home' || currentStep === 'search') return null;
 
@@ -358,7 +358,6 @@ export default function Booking() {
                 <h2 className="text-2xl font-bold text-surface-900 font-serif mb-6">Guest Information</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                  {/* Full Name */}
                   <div>
                     <Input
                       label="Full Name"
@@ -369,13 +368,11 @@ export default function Booking() {
                       onChange={handleInputChange}
                       required
                     />
-                    {/* ADDED: Error message */}
                     {guestErrors.guestName && (
                       <p className="mt-1 text-xs text-red-500">{guestErrors.guestName}</p>
                     )}
                   </div>
 
-                  {/* Email */}
                   <div>
                     <Input
                       label="Email Address"
@@ -387,13 +384,11 @@ export default function Booking() {
                       onChange={handleInputChange}
                       required
                     />
-                    {/* ADDED: Error message */}
                     {guestErrors.email && (
                       <p className="mt-1 text-xs text-red-500">{guestErrors.email}</p>
                     )}
                   </div>
 
-                  {/* Contact Number */}
                   <div>
                     <Input
                       label="Contact Number"
@@ -404,13 +399,11 @@ export default function Booking() {
                       onChange={handleInputChange}
                       required
                     />
-                    {/* ADDED: Error message */}
                     {guestErrors.contactNumber && (
                       <p className="mt-1 text-xs text-red-500">{guestErrors.contactNumber}</p>
                     )}
                   </div>
 
-                  {/* ID/Passport */}
                   <div>
                     <Input
                       label="ID/Passport"
@@ -420,13 +413,11 @@ export default function Booking() {
                       onChange={handleInputChange}
                       required
                     />
-                    {/* ADDED: Error message */}
                     {guestErrors.idNumber && (
                       <p className="mt-1 text-xs text-red-500">{guestErrors.idNumber}</p>
                     )}
                   </div>
 
-                  {/* Address */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-surface-700 mb-2">Address</label>
                     <textarea
@@ -439,7 +430,6 @@ export default function Booking() {
                       rows="3"
                       placeholder="Your residential address"
                     />
-                    {/* ADDED: Error message */}
                     {guestErrors.address && (
                       <p className="mt-1 text-xs text-red-500">{guestErrors.address}</p>
                     )}
@@ -448,7 +438,6 @@ export default function Booking() {
                 </div>
                 <div className="mt-8 flex justify-end gap-3">
                   <Button variant="ghost" onClick={() => setCurrentStep('home')}>Cancel</Button>
-                  {/* ADDED: Changed onClick to handleGuestNextStep for validation */}
                   <Button onClick={handleGuestNextStep}>
                     Next Step <ChevronRight className="ml-2 w-4 h-4" />
                   </Button>
@@ -473,7 +462,6 @@ export default function Booking() {
                                 `}
                 >
                   <div className={`relative flex flex-col sm:flex-row gap-6 p-6 rounded-xl h-full ${formData.roomType === room.value ? 'bg-white' : ''}`}>
-                    {/* Fake image placeholder with gradient */}
                     <div className={`w-full sm:w-40 h-32 rounded-lg bg-gradient-to-br ${room.color} flex items-center justify-center text-white shrink-0`}>
                       <room.icon size={32} />
                     </div>
@@ -599,7 +587,7 @@ export default function Booking() {
           </div>
         )}
 
-        {/* Bill/Search Screen - Using similar layout */}
+        {/* Search Screen */}
         {currentStep === 'search' && (
           <div className="max-w-md mx-auto pt-12 animate-fade-in">
             <Card>
@@ -611,12 +599,22 @@ export default function Booking() {
                 <p className="text-surface-500 mb-8">Enter your booking reference</p>
 
                 <div className="space-y-4">
-                  <Input
-                    className="text-center text-lg uppercase tracking-widest font-mono"
-                    placeholder="RES-XXXXXX"
-                    value={searchNumber}
-                    onChange={(e) => setSearchNumber(e.target.value)}
-                  />
+                  <div>
+                    <Input
+                      className="text-center text-lg uppercase tracking-widest font-mono"
+                      placeholder="RES-XXXXXX"
+                      value={searchNumber}
+                      onChange={(e) => {
+                        setSearchNumber(e.target.value);
+                        // ADDED: Clear error as user types
+                        if (searchError) setSearchError('');
+                      }}
+                    />
+                    {/* ADDED: Inline error message */}
+                    {searchError && (
+                      <p className="mt-1 text-xs text-red-500 text-left">{searchError}</p>
+                    )}
+                  </div>
                   <div className="flex gap-3">
                     <Button variant="secondary" onClick={() => setCurrentStep('home')} className="flex-1">Back</Button>
                     <Button onClick={searchReservation} disabled={loading || !searchNumber} className="flex-1" isLoading={loading}>Search</Button>

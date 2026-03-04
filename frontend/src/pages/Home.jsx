@@ -89,10 +89,8 @@ const Home = () => {
                                 Welcome to Ocean View Resort
                             </h2>
                             <p className="text-surface-600 leading-relaxed text-lg">
-                                Nestled along the pristine coastline of Galle, Ocean View Resort offers a sanctuary 
-                                of tranquility and elegance. Whether you're here for a romantic escape, a family 
-                                vacation, or a business retreat, we provide world-class amenities and personalized 
-                                service to make your stay exceptional.
+                        Nestled along the beautiful shores of Galle, Ocean View Resort provides a peaceful and refined getaway. Whether you are planning a romantic holiday, a family trip, or a business stay, we offer exceptional facilities and attentive service to ensure a comfortable and memorable experience.
+
                             </p>
                             
                             <div className="grid grid-cols-2 gap-4 mt-8">
@@ -110,8 +108,8 @@ const Home = () => {
                                 <div className="flex items-start space-x-3 text-surface-500">
                                     <MapPin className="w-5 h-5 mt-1 text-gold-500" />
                                     <span>
-                                        123 Coastal Road, Galle, Sri Lanka<br/>
-                                        <span className="text-sm">+94 11 234 5678</span>
+                                        123 Road, Galle, Sri Lanka<br/>
+                                        <span className="text-sm">+94 91 2243467</span>
                                     </span>
                                 </div>
                             </div>
@@ -126,7 +124,7 @@ const Home = () => {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                             <div className="absolute bottom-6 left-6 text-white">
                                 <p className="font-serif text-2xl">Luxury Suites</p>
-                                <p className="text-sm opacity-90">Starting from $150/night</p>
+                                
                             </div>
                         </div>
                     </div>
